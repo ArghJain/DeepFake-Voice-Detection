@@ -82,4 +82,4 @@ if uploaded_file:
 
 # Footer
 st.markdown("---")
-st.markdown("👨‍💻 Developed by ")
+st.markdown("👨‍💻 Developed by Argh, Vansh and Hardik")
