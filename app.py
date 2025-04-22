@@ -4,15 +4,24 @@ import librosa
 import numpy as np
 import tensorflow as tf
 import os
+from imageio_ffmpeg import get_ffmpeg_exe
 
 # Load trained deepfake detection model
 MODEL_PATH = "deepfake_voice_detector.keras" 
 model = tf.keras.models.load_model(MODEL_PATH)
 
-# Function to convert audio format using FFmpeg
 def convert_audio(input_file, output_file):
     try:
-        command = ["ffmpeg", "-i", input_file, "-acodec", "pcm_s16le", "-ar", "16000", output_file, "-y"]
+        ffmpeg_path = get_ffmpeg_exe()  # Get path to bundled ffmpeg binary
+        command = [
+            ffmpeg_path,
+            "-i", input_file,
+            "-acodec", "pcm_s16le",
+            "-ar", "16000",
+            output_file,
+            "-y"
+        ]
+        print("Running command:", " ".join(command))  # Optional debug
         subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return output_file
     except subprocess.CalledProcessError as e:
@@ -64,7 +73,7 @@ if uploaded_file:
         if converted_file:
             # Predict
             result = predict_audio(converted_file)
-            st.success(f"🎤 Prediction: **{result}**")
+            st.success(f"🎤 Prediction: *{result}*")
         
         # Cleanup
         os.remove(input_path)
@@ -73,5 +82,4 @@ if uploaded_file:
 
 # Footer
 st.markdown("---")
-st.markdown("👨‍💻 Developed by Umang Mittal")
-
+st.markdown("👨‍💻 Developed by ")
